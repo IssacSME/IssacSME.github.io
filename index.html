@@ -180,15 +180,9 @@
           Tu información se usa solo con fines internos del club.
         </p>
       </div>
-
-      <!-- Vista de “gracias / autenticado” para Aruba -->
       <div id="thanks" style="display:none" class="center">
         <h2>¡Gracias!</h2>
         <p>Ya puedes navegar en Internet desde la red de invitados Zonkeys.</p>
-        <!-- IMPORTANTE:
-             Configura en el perfil de Aruba el "Authentication Text"
-             exactamente igual a este texto: AUTH_OK
-        -->
         <p id="auth-text" style="font-size:0.001rem; color:#ffffff;">AUTH_OK</p>
       </div>
 
@@ -196,12 +190,10 @@
   </div>
 
   <script>
-    // === Opcional: endpoint para guardar en Google Sheets vía Apps Script ===
+    
     const APPS_SCRIPT_URL =
       "https://script.google.com/macros/s/AKfycbzzTVDFJgpLqUunQA5j_2-KXbcIXdJmkF2bcYKXKrh07g2EACZ0kD4KqyK9ik8Hjpme/exec";
-      // Si no quieres guardar datos, deja APPS_SCRIPT_URL = "";
 
-    // Aruba suele mandar parámetros como ip, mac, essid, url, apname, etc.
     const params = new URLSearchParams(window.location.search);
     const originalUrl = params.get("url") || "https://www.google.com";
     const essid       = params.get("essid") || "";
@@ -216,7 +208,6 @@
       event.preventDefault();
       hideErrors();
 
-      // Validación HTML5
       if (!form.checkValidity()) {
         showFieldError("name",  !form.name.validity.valid);
         showFieldError("email", !form.email.validity.valid);
@@ -229,7 +220,6 @@
       const email = form.email.value.trim();
       const phone = form.phone.value.trim();
 
-      // Enviar a Apps Script (guardar en Sheets) - opcional
       if (APPS_SCRIPT_URL) {
         const data = new URLSearchParams();
         data.append("guest_name",  name);
@@ -248,11 +238,9 @@
         });
       }
 
-      // Mostramos pantalla de "gracias" con el texto AUTH_OK
       portal.style.display = "none";
       thanks.style.display = "block";
 
-      // Si quieres además redirigir al usuario a la URL original después de unos segundos:
       setTimeout(function () {
         window.location.href = originalUrl;
       }, 1500);
