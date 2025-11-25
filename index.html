@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -81,30 +82,6 @@
       box-shadow: 0 0 0 1px rgba(37,99,235,0.3);
     }
 
-    input:invalid[required] {
-      border-color: #dc2626;
-      background: #fef2f2;
-    }
-
-    input:valid {
-      border-color: #16a34a;
-      background: #ecfdf3;
-    }
-
-    .error {
-      display: none;
-      font-size: .75rem;
-      color: #dc2626;
-      margin-top: -4px;
-    }
-
-    .hint {
-      font-size: .75rem;
-      color: #6b7280;
-      margin-top: -4px;
-      margin-bottom: 2px;
-    }
-
     button[type="submit"] {
       margin-top: 8px;
       padding: 10px 16px;
@@ -140,64 +117,50 @@
   <div class="wrapper">
     <div class="card" id="card">
 
+      <!-- Portal -->
       <div id="portal">
         <div class="logo">
           <span>ZONKEYS WIFI</span>
         </div>
         <h1>Conéctate al Wi-Fi de invitados</h1>
-        <p class="subtitle">
-          Ingresa tus datos para acceder a Internet.
-        </p>
+        <p class="subtitle">Ingresa tus datos para acceder a Internet.</p>
 
         <form id="access-form" novalidate>
           <label for="name">Tu nombre *</label>
-          <input id="name" name="guest_name" type="text" required minlength="3"
-                 placeholder="Ej. Juan Pérez">
-          <div class="error" data-for="name">
-            Este campo no puede estar en blanco (mínimo 3 caracteres).
-          </div>
+          <input id="name" name="guest_name" type="text" required minlength="3" placeholder="Ej. Juan Pérez">
 
           <label for="email">Tu email *</label>
-          <input id="email" name="guest_email" type="email" required
-                 placeholder="tucorreo@ejemplo.com">
-          <div class="error" data-for="email">
-            Ingresa un correo electrónico válido.
-          </div>
+          <input id="email" name="guest_email" type="email" required placeholder="tucorreo@ejemplo.com">
 
           <label for="phone">Tu teléfono *</label>
-          <input id="phone" name="guest_phone" type="tel" required
-                 pattern="[0-9]{10}" maxlength="10" inputmode="numeric"
-                 placeholder="10 dígitos, sin espacios">
-          <div class="error" data-for="phone">
-            Ingresa un número de teléfono de 10 dígitos (solo números).
-          </div>
-          <div class="hint">Todos los campos marcados con * son obligatorios.</div>
+          <input id="phone" name="guest_phone" type="tel" required pattern="[0-9]{10}" maxlength="10" inputmode="numeric" placeholder="10 dígitos, sin espacios">
 
           <button type="submit">Acceder a Internet</button>
         </form>
 
-        <p class="small">
-          Tu información se usa solo con fines internos del club.
-        </p>
+        <p class="small">Tu información se usa solo con fines internos del club.</p>
       </div>
+
+      <!-- Pantalla de Gracias -->
       <div id="thanks" style="display:none" class="center">
         <h2>¡Gracias!</h2>
         <p>Ya puedes navegar en Internet desde la red de invitados Zonkeys.</p>
-        <p id="auth-text" style="font-size:0.001rem; color:#ffffff;">AUTH_OK</p>
+        <!-- Texto que Aruba busca -->
+        <p id="auth-text">AUTH_OK</p>
       </div>
 
     </div>
   </div>
+
 <script>
-  const APPS_SCRIPT_URL =
-    "https://script.google.com/macros/s/AKfycbzzTVDFJgpLqUunQA5j_2-KXbcIXdJmkF2bcYKXKrh07g2EACZ0kD4KqyK9ik8Hjpme/exec";
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzzTVDFJgpLqUunQA5j_2-KXbcIXdJmkF2bcYKXKrh07g2EACZ0kD4KqyK9ik8Hjpme/exec";
 
-  const params     = new URLSearchParams(window.location.search);
-  const essid      = params.get("essid") || "";
-  const clientMac  = params.get("mac")   || "";
-  const clientIp   = params.get("ip")    || "";
+  const params = new URLSearchParams(window.location.search);
+  const essid = params.get("essid") || "";
+  const clientMac = params.get("mac") || "";
+  const clientIp = params.get("ip") || "";
 
-  const form   = document.getElementById("access-form");
+  const form = document.getElementById("access-form");
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -208,22 +171,22 @@
     }
 
     const data = new URLSearchParams();
-    data.append("guest_name",  form.name.value.trim());
+    data.append("guest_name", form.name.value.trim());
     data.append("guest_email", form.email.value.trim());
     data.append("guest_phone", form.phone.value.trim());
-    data.append("essid",       essid);
-    data.append("client_mac",  clientMac);
-    data.append("client_ip",   clientIp);
+    data.append("essid", essid);
+    data.append("client_mac", clientMac);
+    data.append("client_ip", clientIp);
 
     try {
       await fetch(APPS_SCRIPT_URL, { method: "POST", mode: "no-cors", body: data });
     } catch (e) {
       console.warn("Apps Script no respondió (no-cors):", e);
     }
-    document.open('text/plain', 'replace');
-    document.write('AUTH_OK');
-    document.close();
 
+    // Mostrar pantalla de gracias con AUTH_OK
+    document.getElementById("portal").style.display = "none";
+    document.getElementById("thanks").style.display = "block";
   });
 </script>
 </body>
