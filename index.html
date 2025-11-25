@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -107,15 +106,11 @@
       color: #6b7280;
       margin-top: 8px;
     }
-
-    .center {
-      text-align: center;
-    }
   </style>
 </head>
 <body>
   <div class="wrapper">
-    <div class="card" id="card">
+    <div class="card">
 
       <!-- Portal -->
       <div id="portal">
@@ -141,19 +136,13 @@
         <p class="small">Tu información se usa solo con fines internos del club.</p>
       </div>
 
-      <!-- Pantalla de Gracias -->
-      <div id="thanks" style="display:none" class="center">
-        <h2>¡Gracias!</h2>
-        <p>Ya puedes navegar en Internet desde la red de invitados Zonkeys.</p>
-        <!-- Texto que Aruba busca -->
-        <p id="auth-text">AUTH_OK</p>
-      </div>
-
     </div>
   </div>
 
 <script>
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzzTVDFJgpLqUunQA5j_2-KXbcIXdJmkF2bcYKXKrh07g2EACZ0kD4KqyK9ik8Hjpme/exec";
+  const APPS_SCRIPT_URL ="https://script.google.com/macros/s/AKfycbzzTVDFJgpLqUunQA5j_2-KXbcIXdJmkF2bcYKXKrh07g2EACZ0kD4KqyK9ik8Hjpme/exec";
+
+  const AUTH_PAGE ="https://issacsme.github.io/PortalCautivo/auth-ok.html";
 
   const params = new URLSearchParams(window.location.search);
   const essid = params.get("essid") || "";
@@ -162,32 +151,34 @@
 
   const form = document.getElementById("access-form");
 
-form.addEventListener("submit", async (event) => {
-  event.preventDefault();
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
 
-  if (!form.checkValidity()) {
-    form.reportValidity();
-    return;
-  }
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
 
-  const data = new URLSearchParams();
-  data.append("guest_name", form.name.value.trim());
-  data.append("guest_email", form.email.value.trim());
-  data.append("guest_phone", form.phone.value.trim());
-  data.append("essid", essid);
-  data.append("client_mac", clientMac);
-  data.append("client_ip", clientIp);
+    const data = new URLSearchParams();
+    data.append("guest_name", form.name.value.trim());
+    data.append("guest_email", form.email.value.trim());
+    data.append("guest_phone", form.phone.value.trim());
+    data.append("essid", essid);
+    data.append("client_mac", clientMac);
+    data.append("client_ip", clientIp);
 
-  try {
-    await fetch(APPS_SCRIPT_URL, { method: "POST", mode: "no-cors", body: data });
-  } catch (e) {
-    console.warn("Apps Script no respondió (no-cors):", e);
-  }
-
-  // AQUÍ en vez de mostrar el <div id="thanks">,
-  // redirigimos a una segunda página estática:
-  window.location.href = "https://issacsme.github.io/PortalCautivo/auth-ok.html";
-});
+    try {
+      await fetch(APPS_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        body: data
+      });
+    } catch (e) {
+      console.warn("Apps Script no respondió:", e);
+    }
+    // Redirigir a la página que contiene AUTH_OK
+    window.location.href = AUTH_PAGE;
+  });
 </script>
 </body>
 </html>
