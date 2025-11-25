@@ -140,9 +140,11 @@
   </div>
 
 <script>
-  const APPS_SCRIPT_URL ="https://script.google.com/macros/s/AKfycbzzTVDFJgpLqUunQA5j_2-KXbcIXdJmkF2bcYKXKrh07g2EACZ0kD4KqyK9ik8Hjpme/exec";
+  const APPS_SCRIPT_URL =
+    "https://script.google.com/macros/s/AKfycbzzTVDFJgpLqUunQA5j_2-KXbcIXdJmkF2bcYKXKrh07g2EACZ0kD4KqyK9ik8Hjpme/exec";
 
-  const AUTH_PAGE ="https://issacsme.github.io/PortalCautivo/auth-ok.html";
+  const AUTH_PAGE =
+    "https://issacsme.github.io/PortalCautivo/auth-ok.html";
 
   const params = new URLSearchParams(window.location.search);
   const essid = params.get("essid") || "";
@@ -176,6 +178,7 @@
     } catch (e) {
       console.warn("Apps Script no respondió:", e);
     }
+
     // Redirigir a la página que contiene AUTH_OK
     window.location.href = AUTH_PAGE;
   });
